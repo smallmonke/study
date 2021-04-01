@@ -1,7 +1,7 @@
-##关于函数
+## 关于函数
 什么是高阶函数： 把函数作为参数或者返回值的一类函数。
 
-####before函数
+#### before函数
 ```javascript
 Function.prototype.before = function(beforeFn){
     return ()=>{
