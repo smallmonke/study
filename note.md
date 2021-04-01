@@ -68,6 +68,7 @@ types.forEach(type=>{
 
 #### 柯里化函数
 ```javascript
+//笔记里的写法
 const currying = (fn,args = []) => {
     let len = fn.length;
     return (..._)=>{
@@ -78,6 +79,16 @@ const currying = (fn,args = []) => {
         return fn(...arg);
     }
 };
+//另外一个写法
+// function currying(fn) {
+//   //存储每次调用的时候传入的变量
+//   const inner = (args = []) => {
+//     //存储每次调用传入的参数
+//     return args.length >= fn.length? fn(...args): (...userArgs) => inner([...args, ...userArgs]);
+//     //递归返回函数
+//   };
+//   return inner();
+// }
 const add = (a, b, c, d, e) => {
   return a + b + c + d + e;
 };
