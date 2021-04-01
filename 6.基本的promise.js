@@ -1,11 +1,4 @@
-/*
- * @Description: promise
- * @Version: 1.0
- * @Autor: ziwei
- * @Date: 2021-04-01 17:52:03
- * @LastEditors: ziwei
- * @LastEditTime: 2021-04-01 18:52:36
- */
+
 //1.promise是一个类，无需考虑兼容性
 //2.当使用promie的时候 会传入一个执行器 此执行器是立即执行
 //3.当前excutor 给了两个函数来描述当前promise的状态。promise有3个状态 等待态：pending,失败态：成功态：fullfilled,一旦状态改变后不可再修改
