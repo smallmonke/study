@@ -1,3 +1,4 @@
+
 let PENDING = "PENDING";
 let FULLFILLed = "FULLFIlled";
 let REJECTED = "REJECTED";
@@ -36,11 +37,11 @@ class Promise {
       reject(e);
     }
   }
-  then(onFulfilled, onRejected) {//onFulfilled onRejected promise+规定的2个函数
+  then(onFullfilled, onRejected) {//onFulfilled onRejected promise+规定的2个函数
     if (this.status == PENDING) {//代码是异步调用resolve或者reject
       this.onResolvedCallbacks.push(() => {//切片编程AOP
         //todo
-        onFulfilled(this.value)
+        onFullfilled(this.value)
       });
       this.onRejectedCallback.push(() => {
         //todo
@@ -48,7 +49,7 @@ class Promise {
       });
     }
     if (this.status == FULLFILLed) {//成功调用成功的方法
-      onFulfilled(this.value);
+      onFullfilled(this.value);
     }
     if (this.status == REJECTED) {//失败调用失败的方法
       onRejected(this.reason);

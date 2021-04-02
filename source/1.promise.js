@@ -5,7 +5,7 @@
  * @Autor: ziwei
  * @Date: 2021-04-01 18:00:26
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-01 18:58:48
+ * @LastEditTime: 2021-04-02 10:49:00
  */
 let PENDING = "PENDING";
 let FULLFILLed = "FULLFIlled";
@@ -37,7 +37,7 @@ class Promise{
       reject(e);
     }
   }
-  then(onFulfilled,onRejected){//onFulfilled onRejected promise+规定的2个函数
+  then(onFulfilled,onRejected){//onFulfilled onRejected promiseA+规定的2个函数
     if(this.status == FULLFILLed){
       onFulfilled(this.value);
     }
