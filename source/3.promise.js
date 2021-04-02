@@ -4,7 +4,7 @@
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 15:42:41
+ * @LastEditTime: 2021-04-02 16:09:34
  */
 //处理x 是不是promise
 //别人的promise可能是成功后还能调用失败
@@ -16,6 +16,9 @@ let REJECTED = 'REJECTED';
 //利用x的值判断时调用promise2的resolve还是reject
 function resolvePromise(promise2, x, resolve, reject) {
   //核心流程
+  if(promise2 === x){//对应9.process 不能是自己
+    return reject(new TypeError('错误'))
+  }
   // console.log(promise2, x, resolve, reject);
   //别人写的promise可能调用成功后 还能调用失败
   //我可能写的promise 要和别人的兼容 考虑不是自己写的promise的情况
