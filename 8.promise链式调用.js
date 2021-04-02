@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description:判断Ｘ是不是
  * @Version: 1.0
  * @Autor: ziwei
  * @Date: 2021-04-02 09:39:04
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 12:13:29
+ * @LastEditTime: 2021-04-02 15:31:26
  */
 //promise的特点：解决了什么问题：1 链式调用解决嵌套回调的问题 2：同步并发问题
 //1.

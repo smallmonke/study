@@ -4,17 +4,52 @@
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 13:59:27
+ * @LastEditTime: 2021-04-02 15:42:41
  */
+//处理x 是不是promise
+//别人的promise可能是成功后还能调用失败
 
 let PENDING = 'PENDING';
 let FULLFILLed = 'FULLFIlled';
 let REJECTED = 'REJECTED';
 
-//利用x的值判断时调用promise2的resolve驾驶reject
-function  resolvePromise(promise2,x,resolve,reject){
+//利用x的值判断时调用promise2的resolve还是reject
+function resolvePromise(promise2, x, resolve, reject) {
   //核心流程
-  console.log(promise2,x,resolve,reject);
+  // console.log(promise2, x, resolve, reject);
+  //别人写的promise可能调用成功后 还能调用失败
+  //我可能写的promise 要和别人的兼容 考虑不是自己写的promise的情况
+  if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
+    //有可能是promise
+    let called = false;
+    try {
+      let then = x.then;
+      if (typeof then == 'function') {
+        //这里我就认为你是promise了 x.then这样写会触发getter可能会发生异常
+        then.call(
+          x,
+          (y) => {
+            if(called){return}
+            called = false;
+            resolve(y);
+          },
+          (r) => {//reason
+            if(called){return}
+            called = false;
+            reject(r);
+          }
+        );
+      } else {
+        resolve(x.then);
+      }
+    } catch (e) {
+      if(called){return}
+      called = false;
+      reject(e)
+    }
+  } else {
+    resolve(x);
+  }
 }
 
 class Promise {
@@ -62,12 +97,12 @@ class Promise {
         setTimeout(() => {
           try {
             let x = onFullfilled(this.value);
-  
+
             //此x 可能是一个promise 如果是promise需要看一下这个promise是成功还是失败 .then,如果是成功则把成功结果调用promise2的resolve传递进去，如果失败则同理
-  
+
             //总结 x的值决定是调用promise2的resolve还是reject，如果是promise则取他的状态，如果是普通值则直接调用resolve
             // resolve(x);
-            resolvePromise(promise2,x,resolve,reject)
+            resolvePromise(promise2, x, resolve, reject);
           } catch (e) {
             reject(e);
           }
@@ -78,7 +113,7 @@ class Promise {
         setTimeout(() => {
           try {
             let x = onRejected(this.reason);
-            resolvePromise(promise2,x,resolve,reject)
+            resolvePromise(promise2, x, resolve, reject);
           } catch (e) {
             reject(e);
           }
@@ -86,29 +121,27 @@ class Promise {
       }
       if (this.status == PENDING) {
         //代码是异步调用resolve或者reject
-          this.onResolvedCallbacks.push(() => {
-            setTimeout(() => {
-              try {
+        this.onResolvedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
               let x = onFullfilled(this.value);
-              resolvePromise(promise2,x,resolve,reject)
-              } catch (e) {
-                reject(e);
-              }
-            }, 0);
-          });
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          }, 0);
+        });
 
-        
-          this.onRejectedCallback.push(() => {
-            setTimeout(() => {
-              try {
-                let x = onRejected(this.reason);
-                resolvePromise(promise2,x,resolve,reject) //只要返回的普通值都会走resolve
-              } catch (e) {
-                reject(e);
-              }
-            })
+        this.onRejectedCallback.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onRejected(this.reason);
+              resolvePromise(promise2, x, resolve, reject); //只要返回的普通值都会走resolve
+            } catch (e) {
+              reject(e);
+            }
           });
-       
+        });
       }
     });
     return promise2;
