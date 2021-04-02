@@ -14,6 +14,7 @@ class Promise {
       if (this.status === PENDING) {
         this.value = value;
         this.status = FULLFILLed;
+        //发布
         this.onResolvedCallbacks.forEach((v) => {
           v();
         })
@@ -38,6 +39,7 @@ class Promise {
     }
   }
   then(onFullfilled, onRejected) {//onFulfilled onRejected promise+规定的2个函数
+    //订阅模式
     if (this.status == PENDING) {//代码是异步调用resolve或者reject
       this.onResolvedCallbacks.push(() => {//切片编程AOP
         //todo
