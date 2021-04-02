@@ -4,9 +4,9 @@
  * @Autor: ziwei
  * @Date: 2021-04-02 16:18:59
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 16:27:32
+ * @LastEditTime: 2021-04-02 17:45:02
  */
-const Promise = require('./source/3.promise');
+//const Promise = require('./source/3.promise');
 // let promise2 = new Promise((resolve) => {
 //   resolve(1);
 // }).then(
@@ -36,10 +36,24 @@ const Promise = require('./source/3.promise');
 //   }
 // );
 
-new Promise((resolve)=>{
-  resolve(200)
-}).then().then().then().then((data)=>{
-  console.log(data,'s');
-},err=>{
-  console.log(err,'e');
+//值得穿透
+new Promise((resolve, reject) => {
+  reject(200);
 })
+  .then((data) => {
+    return data;
+  })
+  .then((data) => {
+    return data;
+  })
+  .then((data) => {
+    //return data;
+  })
+  .then(
+    (data) => {
+      console.log(data, 's');
+    },
+    (err) => {
+      console.log(err, 'e');
+    }
+  );

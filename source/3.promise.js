@@ -4,7 +4,7 @@
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 16:25:45
+ * @LastEditTime: 2021-04-02 18:17:42
  */
 //处理x 是不是promise
 //别人的promise可能是成功后还能调用失败
@@ -93,8 +93,9 @@ class Promise {
       reject(e);
     }
   }
-  then(onFullfilled, onRejected) {
-    //onFulfilled onRejected promise+规定的2个函数
+  then(onFullfilled, onRejected) {  //onFulfilled onRejected promise+规定的2个函数
+    typeof onFullfilled=="function"?onFullfilled:v=>v;
+    typeof onRejected=="function"?onRejected:v=>v;
     let promise2 = new Promise((resolve, reject) => {
       if (this.status == FULLFILLed) {
         //成功调用成功的方法
