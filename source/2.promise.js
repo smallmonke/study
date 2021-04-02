@@ -1,4 +1,12 @@
 
+/*
+ * @Description:promise有异步处理then的时候订阅 resolve的时候发布
+ * @Version: 1.0
+ * @Autor: ziwei
+ * @Date: 2021-04-02 10:54:58
+ * @LastEditors: ziwei
+ * @LastEditTime: 2021-04-02 11:26:50
+ */
 let PENDING = "PENDING";
 let FULLFILLed = "FULLFIlled";
 let REJECTED = "REJECTED";

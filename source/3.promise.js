@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description:promise中x (可以多次then  且then的结果可能是promise)
  * @Version: 1.0
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 11:20:01
+ * @LastEditTime: 2021-04-02 11:26:10
  */
 
 let PENDING = 'PENDING';
