@@ -4,10 +4,12 @@
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
- * @LastEditTime: 2021-04-02 16:09:34
+ * @LastEditTime: 2021-04-02 16:25:45
  */
 //处理x 是不是promise
 //别人的promise可能是成功后还能调用失败
+//then 返回还是promise 递归处理
+//值的穿透
 
 let PENDING = 'PENDING';
 let FULLFILLed = 'FULLFIlled';
@@ -34,7 +36,7 @@ function resolvePromise(promise2, x, resolve, reject) {
           (y) => {
             if(called){return}
             called = false;
-            resolve(y);
+            resolvePromise(promise2,y,resolve,reject);//知道解析他不是promise的位置
           },
           (r) => {//reason
             if(called){return}
