@@ -18,7 +18,7 @@ let REJECTED = 'REJECTED';
 //利用x的值判断时调用promise2的resolve还是reject
 function resolvePromise(promise2, x, resolve, reject) {
   //核心流程
-  if(promise2 === x){//对应9.process 不能是自己
+  if (promise2 === x) {//对应9.process 不能是自己
     return reject(new TypeError('错误'))
   }
   // console.log(promise2, x, resolve, reject);
@@ -34,12 +34,12 @@ function resolvePromise(promise2, x, resolve, reject) {
         then.call(
           x,
           (y) => {
-            if(called){return}
+            if (called) { return }
             called = false;
-            resolvePromise(promise2,y,resolve,reject);//知道解析他不是promise的位置
+            resolvePromise(promise2, y, resolve, reject);//知道解析他不是promise的位置
           },
           (r) => {//reason
-            if(called){return}
+            if (called) { return }
             called = false;
             reject(r);
           }
@@ -48,11 +48,12 @@ function resolvePromise(promise2, x, resolve, reject) {
         resolve(x.then);
       }
     } catch (e) {
-      if(called){return}
+      if (called) { return }
       called = false;
       reject(e)
     }
   } else {
+    //说明返回的是一个普通值 直接将他放到promise2.resolve中
     resolve(x);
   }
 }
@@ -65,12 +66,15 @@ class Promise {
     this.onResolvedCallbacks = [];
     this.onRejectedCallback = [];
     const resolve = (value) => {
+      if(value instanceof Promise){
+        return value.then(resolve,reject);
+      }
       //成功的resolve函数
       if (this.status === PENDING) {
         this.value = value;
         this.status = FULLFILLed;
-        this.onResolvedCallbacks.forEach((v) => {
-          v();
+        this.onResolvedCallbacks.forEach((fn) => {
+          fn();
         });
       }
     };
@@ -80,8 +84,8 @@ class Promise {
       if (this.status === PENDING) {
         this.status = REJECTED; //修改状态
         this.reason = reason;
-        this.onRejectedCallback.forEach((v) => {
-          v();
+        this.onRejectedCallback.forEach((fn) => {
+          fn();
         });
       }
     };
@@ -93,16 +97,17 @@ class Promise {
       reject(e);
     }
   }
-  then(onFullfilled, onRejected) {  //onFulfilled onRejected promise+规定的2个函数
-    typeof onFullfilled=="function"?onFullfilled:v=>v;
-    typeof onRejected=="function"?onRejected:v=>v;
+  //then中的参数是可选的
+  then(onFulfilled, onRejected) {  //onFulfilled onRejected promise+规定的2个函数
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : v => v;
+    onRejected = typeof onRejected === "function" ? onRejected : err => {throw err};
     let promise2 = new Promise((resolve, reject) => {
       if (this.status == FULLFILLed) {
         //成功调用成功的方法
         //因为：resolvePromise里边用到了promise2 在new的时候还没有生成 所以要开另外的任何 settimeout或者setinterval 等
         setTimeout(() => {
           try {
-            let x = onFullfilled(this.value);
+            let x = onFulfilled(this.value);
 
             //此x 可能是一个promise 如果是promise需要看一下这个promise是成功还是失败 .then,如果是成功则把成功结果调用promise2的resolve传递进去，如果失败则同理
 
@@ -114,7 +119,7 @@ class Promise {
           }
         }, 0);
       }
-      if (this.status == REJECTED) {
+      if (this.status === REJECTED) {
         //失败调用失败的方法
         setTimeout(() => {
           try {
@@ -130,7 +135,7 @@ class Promise {
         this.onResolvedCallbacks.push(() => {
           setTimeout(() => {
             try {
-              let x = onFullfilled(this.value);
+              let x = onFulfilled(this.value);
               resolvePromise(promise2, x, resolve, reject);
             } catch (e) {
               reject(e);
@@ -146,7 +151,7 @@ class Promise {
             } catch (e) {
               reject(e);
             }
-          });
+          },0);
         });
       }
     });
@@ -154,4 +159,13 @@ class Promise {
   }
 }
 
+//npm install -g promises-aplus-tests
+Promise.deferred = function name(params) {
+  let dfd = {};
+  dfd.Promise = new Promise((resolve,reject)=>{
+    dfd.resolve = resolve;
+    dfd.reject = reject;
+  }) 
+  return dfd;
+}
 module.exports = Promise;
