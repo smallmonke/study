@@ -12,7 +12,7 @@
 //值的穿透
 
 let PENDING = 'PENDING';
-let FULLFILLed = 'FULLFIlled';
+let FULFILLED = 'FULFILLED';
 let REJECTED = 'REJECTED';
 
 //利用x的值判断时调用promise2的resolve还是reject
@@ -72,7 +72,7 @@ class Promise {
       //成功的resolve函数
       if (this.status === PENDING) {
         this.value = value;
-        this.status = FULLFILLed;
+        this.status = FULFILLED;
         this.onResolvedCallbacks.forEach((fn) => {
           fn();
         });
@@ -102,7 +102,7 @@ class Promise {
     onFulfilled = typeof onFulfilled === "function" ? onFulfilled : v => v;
     onRejected = typeof onRejected === "function" ? onRejected : err => {throw err};
     let promise2 = new Promise((resolve, reject) => {
-      if (this.status == FULLFILLed) {
+      if (this.status == FULFILLED) {
         //成功调用成功的方法
         //因为：resolvePromise里边用到了promise2 在new的时候还没有生成 所以要开另外的任何 settimeout或者setinterval 等
         setTimeout(() => {
