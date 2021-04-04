@@ -160,9 +160,9 @@ class Promise {
 }
 
 //npm install -g promises-aplus-tests
-Promise.deferred = function name(params) {
+Promise.deferred = function () {
   let dfd = {};
-  dfd.Promise = new Promise((resolve,reject)=>{
+  dfd.promise = new Promise((resolve,reject)=>{
     dfd.resolve = resolve;
     dfd.reject = reject;
   }) 
