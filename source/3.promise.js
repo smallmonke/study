@@ -160,6 +160,7 @@ class Promise {
 }
 
 //npm install -g promises-aplus-tests
+//延迟对象 帮我们减少一次套用 针对面前来说 应用不是很广泛
 Promise.deferred = function () {
   let dfd = {};
   dfd.promise = new Promise((resolve,reject)=>{
