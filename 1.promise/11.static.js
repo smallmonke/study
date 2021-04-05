@@ -48,3 +48,5 @@ Promise.all([1, 2, 3, new Promise((resolve, reject) => {
 }).catch(err => {
     console.log(err);
 });
+
+//finally 如何实现一个Promise.finally
