@@ -1,6 +1,5 @@
 /*
  * @Description:promise中x (可以多次then  且then的结果可能是promise)
- * @Version: 1.0
  * @Autor: ziwei
  * @Date: 2021-04-02 10:54:58
  * @LastEditors: ziwei
@@ -157,8 +156,41 @@ class Promise {
     });
     return promise2;
   }
+  static resolve(value){
+    return new Promise((resolve,reject)=>{
+      resolve(value);
+    })
+  }
+  static reject(value){
+    return new Promise((resolve,reject)=>{
+      reject(value);
+    })
+  }
+  static all = (promises) => {
+    let result = [];
+    let times = 0;
+    return new Promise((resolve, reject) => {
+      const resolveData = (data, index) => {
+        result[index] = data;
+        if (++times == promises.length) {
+          resolve(result)
+        }
+      }
+      promises.forEach((v, index) => {//并发 多个请求一起执行的
+        if (v && typeof v.then == 'function') {
+          v.then((data) => { resolveData(data, index); }, reject)//如果其中某一个promise失败了 直接执行失败即可
+        } else {
+          resolveData(v, index);
+        }
+      })
+    })
+  }
+  catch(errorFn){
+    return this.then(null, errorFn);
+  }
 }
 
+//导出测试
 //npm install -g promises-aplus-tests
 //延迟对象 帮我们减少一次套用 针对面前来说 应用不是很广泛
 Promise.deferred = function () {
@@ -169,4 +201,5 @@ Promise.deferred = function () {
   }) 
   return dfd;
 }
+
 module.exports = Promise;
